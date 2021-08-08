@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class MapGen_CellularAutomata : MonoBehaviour
+public class MapGen_CellularAutomata : IMapGenerator
 {
     public int Width;
     public int Height;
@@ -16,6 +16,16 @@ public class MapGen_CellularAutomata : MonoBehaviour
 
     private int[,] _map;
 
+    public MapGen_CellularAutomata(int width, int height, int initialIterations, int randomFillPercent)
+    {
+        Width = width;
+        Height = height;
+        UseRandomSeed = true;
+        InitialIterations = initialIterations;
+        RandomFillPercent = randomFillPercent;
+    }
+
+    /*
     void Start()
     {
         GenerateMap();
@@ -28,8 +38,9 @@ public class MapGen_CellularAutomata : MonoBehaviour
             SmoothMap();
         }
     }
+    */
 
-    private void GenerateMap()
+    public void GenerateMap()
     {
         _map = new int[Width, Height];
         RandomFillMap();
@@ -38,6 +49,11 @@ public class MapGen_CellularAutomata : MonoBehaviour
         {
             SmoothMap();
         }
+    }
+
+    public int[,] GetMap()
+    {
+        return _map;
     }
 
     private void RandomFillMap()
@@ -71,13 +87,13 @@ public class MapGen_CellularAutomata : MonoBehaviour
         {
             for (int y = 0; y < Height; y++)
             {
-                int neightborCount = GetNeighborWallCount(x, y);
+                int neighborCount = GetNeighborWallCount(x, y);
 
-                if (neightborCount > 4)
+                if (neighborCount > 4)
                 {
                     _map[x, y] = 1;
                 }
-                else
+                else if (neighborCount < 4)
                 {
                     _map[x, y] = 0;
                 }
@@ -110,6 +126,7 @@ public class MapGen_CellularAutomata : MonoBehaviour
         return count;
     }
 
+    /*
     void OnDrawGizmos()
     {
         if (_map != null)
@@ -125,4 +142,5 @@ public class MapGen_CellularAutomata : MonoBehaviour
             }
         }
     }
+    */
 }
